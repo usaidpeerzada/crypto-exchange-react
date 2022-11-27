@@ -45,7 +45,7 @@ export function CryptoHomePage() {
     <>
       <Box bg="teal.100" w="100%" p={4} color="teal.500">
         <Flex justify="space-between">
-          <Heading as="h2" size="xl">
+          <Heading as="h2" size="xl" mr={3}>
             CrEx
           </Heading>
 
@@ -70,7 +70,8 @@ export function CryptoHomePage() {
       <Alert status="info">
         <AlertIcon />
         <Text as="h2">
-          Top 12 crypto currencies - click on the icon on card for more info.
+          Top 12 crypto currencies - click on the icon on card for more info -
+          search for any cryptocurrency.
         </Text>
       </Alert>
       <Flex wrap="wrap" gap={8} justify="center" bg="teal.50" pt={10} pb={10}>
