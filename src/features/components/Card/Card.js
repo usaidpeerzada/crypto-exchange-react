@@ -1,16 +1,5 @@
 import React from "react";
-import {
-  Card,
-  CardBody,
-  CardFooter,
-  Box,
-  Stack,
-  Heading,
-  Text,
-  Divider,
-  Button,
-} from "@chakra-ui/react";
-import { ArrowForwardIcon, InfoIcon } from "@chakra-ui/icons";
+import { Card, CardBody, Box, Stack, Heading, Text } from "@chakra-ui/react";
 import PopoverComponent from "../Popover/Popover";
 
 export default function CardComponent({
@@ -36,7 +25,7 @@ export default function CardComponent({
         <CardBody>
           <Stack mt="6" spacing="3">
             <Heading size="md">
-              {heading.charAt(0).toUpperCase() + heading.slice(1)}({symbol})
+              {heading?.charAt(0).toUpperCase() + heading?.slice(1)}({symbol})
             </Heading>
             <Text>Rank: {rank}</Text>
             <Text>Exchange id: {exchangeId}</Text>
