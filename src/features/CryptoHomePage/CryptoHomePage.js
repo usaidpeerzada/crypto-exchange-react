@@ -6,7 +6,6 @@ import {
   selectStatus,
   filteredData,
   selectFilterData,
-  cryptoSearchData,
 } from "./cryptoSlice";
 import {
   Box,
