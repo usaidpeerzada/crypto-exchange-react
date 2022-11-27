@@ -5,7 +5,7 @@ export function fetchTop12CryptoData() {
       redirect: "follow",
     };
     return new Promise((resolve) =>
-      fetch("https://api.coincap.io/v2/markets?limit=12", requestOptions)
+      fetch("https://api.coincap.io/v2/markets?limit=22", requestOptions)
         .then((res) => res.json())
         .then((res) => {
           resolve({ data: res });

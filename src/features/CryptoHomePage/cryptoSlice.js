@@ -10,7 +10,12 @@ export const cryptoData = createAsyncThunk(
   "counter/fetchCryptoData",
   async () => {
     const response = await fetchTop12CryptoData();
-    return response.data;
+    // remove duplicates:
+    let filterDuplicates = response?.data?.data?.filter(
+      (value, index, self) =>
+        index === self.findIndex((t) => t.baseId === value.baseId)
+    );
+    return (response.data = filterDuplicates);
   }
 );
 export const cryptoSearchData = createAsyncThunk(
@@ -23,19 +28,7 @@ export const cryptoSearchData = createAsyncThunk(
 export const counterSlice = createSlice({
   name: "crypto-data",
   initialState,
-  // The `reducers` field lets us define reducers and generate associated actions
   reducers: {
-    // increment: (state) => {
-    //   // Redux Toolkit allows us to write "mutating" logic in reducers. It
-    //   // doesn't actually mutate the state because it uses the Immer library,
-    //   // which detects changes to a "draft state" and produces a brand new
-    //   // immutable state based off those changes
-    //   state.value += 1;
-    // },
-    // decrement: (state) => {
-    //   state.value -= 1;
-    // },
-    // // Use the PayloadAction type to declare the contents of `action.payload`
     filterData: (state, action) => {
       state.filterData = [action.payload];
     },
@@ -62,14 +55,19 @@ export const counterSlice = createSlice({
 });
 export const { filterData } = counterSlice.actions;
 
-export const selectCryptoData = (state) => state.counter.data.data;
+export const selectCryptoData = (state) => state.counter.data;
 export const selectStatus = (state) => state.counter.status;
 export const selectFilterData = (state) => state.counter.filterData;
 
 export const filteredData = (name) => async (dispatch, getState) => {
-  const data = await dispatch(cryptoSearchData(name));
+  const replaceSpacesInName = name.toLowerCase().replaceAll(" ", "-");
+  const data = await dispatch(cryptoSearchData(replaceSpacesInName));
   if (data.payload) {
-    dispatch(filterData(data?.payload?.data?.find((l) => l.baseId === name)));
+    dispatch(
+      filterData(
+        data?.payload?.data?.find((l) => l.baseId === replaceSpacesInName)
+      )
+    );
   }
 };
 

@@ -6,6 +6,7 @@ import {
   selectStatus,
   filteredData,
   selectFilterData,
+  cryptoSearchData,
 } from "./cryptoSlice";
 import {
   Box,
@@ -38,7 +39,11 @@ export function CryptoHomePage() {
     }
   }, [dispatch, filterData]);
   function handleSearch() {
-    dispatch(filteredData(name));
+    if (name) {
+      dispatch(filteredData(name));
+    } else {
+      setSearching(false);
+    }
   }
   const dataToMap = searching ? filterData : cryptoDataSelector;
   return (
@@ -70,8 +75,8 @@ export function CryptoHomePage() {
       <Alert status="info">
         <AlertIcon />
         <Text as="h2">
-          Top 12 crypto currencies - click on the icon on card for more info -
-          search for any cryptocurrency.
+          Top crypto currencies based on exchanges - click on the icon on card
+          for more info - <Text as="b">search for any cryptocurrency.</Text>
         </Text>
       </Alert>
       <Flex wrap="wrap" gap={8} justify="center" bg="teal.50" pt={10} pb={10}>
@@ -81,13 +86,13 @@ export function CryptoHomePage() {
           dataToMap?.map((crypto, key) => (
             <CardComponent
               key={key}
-              heading={crypto.baseId}
-              value={crypto.priceUsd}
-              symbol={crypto.baseSymbol}
-              exchangeId={crypto.exchangeId}
-              rank={crypto.rank}
-              tradeCount={crypto.tradesCount24Hr}
-              lastUpdated={crypto.updated}
+              heading={crypto?.baseId}
+              value={crypto?.priceUsd}
+              symbol={crypto?.baseSymbol}
+              exchangeId={crypto?.exchangeId}
+              rank={crypto?.rank}
+              tradeCount={crypto?.tradesCount24Hr}
+              lastUpdated={crypto?.updated}
             />
           ))
         )}
