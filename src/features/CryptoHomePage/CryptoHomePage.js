@@ -45,6 +45,12 @@ export function CryptoHomePage() {
     }
   }
   const dataToMap = searching ? filterData : cryptoDataSelector;
+  let notFound = false;
+  if (dataToMap.length > 0 && dataToMap[0] === undefined) {
+    notFound = true;
+  } else {
+    notFound = false;
+  }
   return (
     <>
       <Box bg="teal.100" w="100%" p={4} color="teal.500">
@@ -84,6 +90,7 @@ export function CryptoHomePage() {
         ) : (
           dataToMap?.map((crypto, key) => (
             <CardComponent
+              notFoundData={notFound}
               key={key}
               heading={crypto?.baseId}
               value={crypto?.priceUsd}

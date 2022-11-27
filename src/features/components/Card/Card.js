@@ -10,6 +10,7 @@ export default function CardComponent({
   rank,
   tradeCount,
   lastUpdated,
+  notFoundData,
 }) {
   const lastUpdatedTimeStamp = Number(lastUpdated);
   const lastUpdatedDate =
@@ -22,20 +23,30 @@ export default function CardComponent({
     <Box>
       <Card width="sm" bg="white">
         <PopoverComponent />
-        <CardBody>
-          <Stack mt="6" spacing="3">
-            <Heading size="md">
-              {heading?.charAt(0).toUpperCase() + heading?.slice(1)}({symbol})
-            </Heading>
-            <Text>Rank: {rank}</Text>
-            <Text>Exchange id: {exchangeId}</Text>
-            <Text>Trade count 24hrs: {tradeCount}</Text>
-            <Text>Last updated: {lastUpdatedDate}</Text>
-            <Text color="teal.600" as="b" fontSize="2xl">
-              ${Number(value).toFixed(3)}
-            </Text>
-          </Stack>
-        </CardBody>
+        {notFoundData ? (
+          <CardBody>
+            <Stack mt="6" spacing="3">
+              <Heading size="md">
+                Woops! could not find that crypto currency...
+              </Heading>
+            </Stack>
+          </CardBody>
+        ) : (
+          <CardBody>
+            <Stack mt="6" spacing="3">
+              <Heading size="md">
+                {heading?.charAt(0).toUpperCase() + heading?.slice(1)}({symbol})
+              </Heading>
+              <Text>Rank: {rank}</Text>
+              <Text>Exchange id: {exchangeId}</Text>
+              <Text>Trade count 24hrs: {tradeCount}</Text>
+              <Text>Last updated: {lastUpdatedDate}</Text>
+              <Text color="teal.600" as="b" fontSize="2xl">
+                ${Number(value).toFixed(3)}
+              </Text>
+            </Stack>
+          </CardBody>
+        )}
         {/* <Divider />
         <CardFooter>
           <Button
