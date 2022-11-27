@@ -1,25 +1,25 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { fetchCryptoData } from "./cryptoAPI";
+import { fetchTop12CryptoData, fetchSearchCryptoData } from "./cryptoAPI";
 
 const initialState = {
   data: [],
   filterData: [],
 };
 
-// The function below is called a thunk and allows us to perform async logic. It
-// can be dispatched like a regular action: `dispatch(incrementAsync(10))`. This
-// will call the thunk with the `dispatch` function as the first argument. Async
-// code can then be executed and other actions can be dispatched. Thunks are
-// typically used to make async requests.
 export const cryptoData = createAsyncThunk(
   "counter/fetchCryptoData",
   async () => {
-    const response = await fetchCryptoData();
-    // The value we return becomes the `fulfilled` action payload
+    const response = await fetchTop12CryptoData();
     return response.data;
   }
 );
-
+export const cryptoSearchData = createAsyncThunk(
+  "counter/fetchCryptoSearchData",
+  async (name) => {
+    const response = await fetchSearchCryptoData(name);
+    return response.data;
+  }
+);
 export const counterSlice = createSlice({
   name: "crypto-data",
   initialState,
@@ -37,7 +37,7 @@ export const counterSlice = createSlice({
     // },
     // // Use the PayloadAction type to declare the contents of `action.payload`
     filterData: (state, action) => {
-      state.filterData = action.payload;
+      state.filterData = [action.payload];
     },
   },
   // The `extraReducers` field lets the slice handle actions defined elsewhere,
@@ -50,25 +50,26 @@ export const counterSlice = createSlice({
       .addCase(cryptoData.fulfilled, (state, action) => {
         state.status = "idle";
         state.data = action.payload;
+      })
+      .addCase(cryptoSearchData.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(cryptoSearchData.fulfilled, (state, action) => {
+        state.status = "idle";
+        state.filterData = action.payload;
       });
   },
 });
 export const { filterData } = counterSlice.actions;
-// export const { cryptoData } = counterSlice.actions;
 
-// The function below is called a selector and allows us to select a value from
-// the state. Selectors can also be defined inline where they're used instead of
-// in the slice file. For example: `useSelector((state: RootState) => state.counter.value)`
 export const selectCryptoData = (state) => state.counter.data.data;
 export const selectStatus = (state) => state.counter.status;
 export const selectFilterData = (state) => state.counter.filterData;
-// We can also write thunks by hand, which may contain both sync and async logic.
-// Here's an example of conditionally dispatching actions based on current state.
 
-export const filteredData = (name) => (dispatch, getState) => {
-  const currentValue = selectCryptoData(getState());
-  if (currentValue) {
-    dispatch(filterData(currentValue.filter((l) => l.baseId === name)));
+export const filteredData = (name) => async (dispatch, getState) => {
+  const data = await dispatch(cryptoSearchData(name));
+  if (data.payload) {
+    dispatch(filterData(data?.payload?.data?.find((l) => l.baseId === name)));
   }
 };
 
